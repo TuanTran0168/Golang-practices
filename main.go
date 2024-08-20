@@ -5,66 +5,33 @@ import (
 	"strings"
 )
 
+/*
+Package Level Variables (like Global Variables in another programing languages)
+In Package Level Variables can't use (:=) like (conferenceName := "Tuan Tran Conference")
+*/
+var conferenceName = "Tuan Tran Conference"
+
+const conferenceTickets int = 50
+
+var remainingTickets uint = 50
+var bookings = []string{}
+
 func main() {
 	fmt.Print("\n")
-	// var conferenceName string = "Tuan Tran Conference"
-	conferenceName := "Tuan Tran Conference"
-	const conferenceTickets int = 50
-	var remainingTickets uint = 50 // not negative
-	// var bookings = [50]string{} // Array
-	// var bookings []string // Slice
-	// var bookings = []string{} // Slice
-	bookings := []string{} // Slice
 
-	// Data type
-	fmt.Printf("ConferenceTickets is (%T) and remainingTickets is (%T) and conferenceName is (%T)\n\n", conferenceTickets, remainingTickets, conferenceName)
-
-	fmt.Printf("Welcome to %v booking application!\n", conferenceName)
-	fmt.Print("Get your tickets here to attend!\n")
-
-	fmt.Printf("We have total of %v tickets and %v are still available\n", conferenceTickets, remainingTickets)
-	fmt.Println("Get your tickets here to attend!")
-	var firstName string
-	var lastName string
-	var userTickets uint
-	var email string
+	greetUsers(conferenceName, conferenceTickets, int(remainingTickets))
 
 	// for condition {}
 	for remainingTickets > 0 && len(bookings) < 50 {
-		fmt.Println("=========================================")
-		fmt.Print("Enter your first name: ")
-		fmt.Scan(&firstName)
 
-		fmt.Print("Enter your last name: ")
-		fmt.Scan(&lastName)
+		firstName, lastName, email, userTickets := getUserInput()
 
-		fmt.Print("Enter your email: ")
-		fmt.Scan(&email)
-
-		fmt.Print("Enter number of tickets: ")
-		fmt.Scan(&userTickets)
-
-		isValidName := len(firstName) > 2 && len(lastName) > 2
-		isValidEmail := strings.Contains(email, "@")
-		isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
+		isValidName, isValidEmail, isValidTicketNumber := validateUserInput(firstName, lastName, email, userTickets, remainingTickets)
 
 		if isValidName && isValidEmail && isValidTicketNumber {
-			remainingTickets = remainingTickets - userTickets
-			bookings = append(bookings, firstName+" "+lastName)
 
-			fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
-			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
-
-			firstNames := []string{}
-
-			// for index, booking := range bookings {}
-			for _, booking := range bookings { // (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
-				names := strings.Fields(booking)
-				firstName := names[0]
-
-				firstNames = append(firstNames, firstName)
-			}
-
+			bookTicket(userTickets, firstName, lastName, email)
+			firstNames := printFirstName(bookings)
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
 			// var noRemainingTickets bool = remainingTickets == 0
@@ -88,21 +55,79 @@ func main() {
 
 		fmt.Print("\n")
 	}
-
-	// switch case in Golang
-	/*
-		city := "Ho Chi Minh"
-		switch city {
-		case "London", "Paris":
-			fmt.Println("London & Paris")
-		case "Viet Nam":
-			fmt.Println("Ho Chi Minh")
-		case "Hong Kong":
-			fmt.Println("Hong Kong")
-		case "New York":
-			fmt.Println("New York")
-		default:
-			fmt.Println("No valid city selected!")
-		}
-	*/
 }
+
+func greetUsers(confName string, confTickets int, remainingTickets int) {
+	fmt.Println("========================== START ==========================")
+	fmt.Printf("Welcome to %v booking application!\n", confName)
+	fmt.Print("Get your tickets here to attend!\n")
+	fmt.Printf("We have total of %v tickets and %v are still available\n", confTickets, remainingTickets)
+	fmt.Println("Get your tickets here to attend!")
+}
+
+func printFirstName(bookings []string) []string {
+	firstNames := []string{}
+	// for index, booking := range bookings {}
+	// (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
+	for _, booking := range bookings {
+		names := strings.Fields(booking)
+		firstName := names[0]
+		firstNames = append(firstNames, firstName)
+	}
+	return firstNames
+}
+
+func validateUserInput(firstName string, lastName string, email string, userTickets uint, remainingTickets uint) (bool, bool, bool) {
+	isValidName := len(firstName) > 2 && len(lastName) > 2
+	isValidEmail := strings.Contains(email, "@")
+	isValidTicketNumber := userTickets > 0 && userTickets <= remainingTickets
+
+	return isValidName, isValidEmail, isValidTicketNumber
+}
+
+func getUserInput() (string, string, string, uint) {
+	var firstName string
+	var lastName string
+	var email string
+	var userTickets uint
+
+	fmt.Println("=============== User Information ===============")
+	fmt.Print("Enter your first name: ")
+	fmt.Scan(&firstName)
+
+	fmt.Print("Enter your last name: ")
+	fmt.Scan(&lastName)
+
+	fmt.Print("Enter your email: ")
+	fmt.Scan(&email)
+
+	fmt.Print("Enter number of tickets: ")
+	fmt.Scan(&userTickets)
+
+	return firstName, lastName, email, userTickets
+}
+
+func bookTicket(userTickets uint, firstName string, lastName string, email string) {
+	remainingTickets = remainingTickets - userTickets
+	bookings = append(bookings, firstName+" "+lastName)
+
+	fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
+	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+}
+
+// switch case in Golang
+/*
+	city := "Ho Chi Minh"
+	switch city {
+	case "London", "Paris":
+		fmt.Println("London & Paris")
+	case "Viet Nam":
+		fmt.Println("Ho Chi Minh")
+	case "Hong Kong":
+		fmt.Println("Hong Kong")
+	case "New York":
+		fmt.Println("New York")
+	default:
+		fmt.Println("No valid city selected!")
+	}
+*/
