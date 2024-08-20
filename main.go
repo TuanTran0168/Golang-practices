@@ -29,8 +29,8 @@ func main() {
 	var userTickets uint
 	var email string
 
-	// infinite loop
-	for {
+	// for condition {}
+	for remainingTickets > 0 && len(bookings) < 50 {
 		fmt.Println("=========================================")
 		fmt.Print("Enter your first name: ")
 		fmt.Scan(&firstName)
@@ -38,29 +38,40 @@ func main() {
 		fmt.Print("Enter your last name: ")
 		fmt.Scan(&lastName)
 
-		fmt.Print("Enter number of tickets: ")
-		fmt.Scan(&userTickets)
-
 		fmt.Print("Enter your email: ")
 		fmt.Scan(&email)
 
-		remainingTickets = remainingTickets - userTickets
-		bookings = append(bookings, firstName+" "+lastName)
+		fmt.Print("Enter number of tickets: ")
+		fmt.Scan(&userTickets)
 
-		fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
-		fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+		if userTickets <= remainingTickets {
+			remainingTickets = remainingTickets - userTickets
+			bookings = append(bookings, firstName+" "+lastName)
 
-		firstNames := []string{}
+			fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
+			fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
 
-		// for index, booking := range bookings {}
-		for _, booking := range bookings { // (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
-			names := strings.Fields(booking)
-			firstName := names[0]
+			firstNames := []string{}
 
-			firstNames = append(firstNames, firstName)
+			// for index, booking := range bookings {}
+			for _, booking := range bookings { // (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
+				names := strings.Fields(booking)
+				firstName := names[0]
+
+				firstNames = append(firstNames, firstName)
+			}
+
+			fmt.Printf("The first names of bookings are: %v\n", firstNames)
+
+			if remainingTickets == 0 {
+				fmt.Printf("Our conference is booked out. Come back next year!")
+				break
+			}
+
+		} else {
+			fmt.Printf("we have %v tickets remaining, so you can't book %v tickets\n", remainingTickets, userTickets)
+			continue
 		}
-
-		fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
 		fmt.Print("\n")
 	}
