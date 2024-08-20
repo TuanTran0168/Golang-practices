@@ -89,13 +89,20 @@ func main() {
 		fmt.Print("\n")
 	}
 
-	// fmt.Printf("Variable types: %T, %T, %T, %T\n", firstName, lastName, userTickets, email)
-	// fmt.Printf("Pointer types: %T, %T, %T, %T\n", &firstName, &lastName, &userTickets, &email)
-	// fmt.Println("Pointer: ", &firstName, &lastName, &userTickets, &email)
-
-	// fmt.Printf("The whole Slice: %v\n", bookings)
-	// fmt.Printf("Slice type: %T\n", bookings)
-	// fmt.Printf("First element: %v\n", bookings[0])
-	// fmt.Printf("Slice lenght: %v\n", len(bookings))
-	// fmt.Printf("Slice: %v\n", bookings[0:])
+	// switch case in Golang
+	/*
+		city := "Ho Chi Minh"
+		switch city {
+		case "London", "Paris":
+			fmt.Println("London & Paris")
+		case "Viet Nam":
+			fmt.Println("Ho Chi Minh")
+		case "Hong Kong":
+			fmt.Println("Hong Kong")
+		case "New York":
+			fmt.Println("New York")
+		default:
+			fmt.Println("No valid city selected!")
+		}
+	*/
 }
