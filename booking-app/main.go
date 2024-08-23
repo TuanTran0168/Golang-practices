@@ -3,7 +3,7 @@ package main
 import (
 	"booking-app/helper" // booking-app is the name of module in go.mod
 	"fmt"
-	"strings"
+	"strconv"
 )
 
 /*
@@ -15,7 +15,13 @@ var conferenceName = "Tuan Tran Conference"
 const conferenceTickets int = 50
 
 var remainingTickets uint = 50
-var bookings = []string{}
+
+/*
+- 			Creating a slice with "make"
+- Alternative way to create a slice
+- We need to define the initial size of the slice (example: make([]map[string]string, 0) )
+*/
+var bookings = make([]map[string]string, 0)
 
 func main() {
 	fmt.Print("\n")
@@ -32,7 +38,7 @@ func main() {
 		if isValidName && isValidEmail && isValidTicketNumber {
 
 			bookTicket(userTickets, firstName, lastName, email)
-			firstNames := printFirstName(bookings)
+			firstNames := getFirstName(bookings)
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
 			// var noRemainingTickets bool = remainingTickets == 0
@@ -66,13 +72,20 @@ func greetUsers(confName string, confTickets int, remainingTickets int) {
 	fmt.Println("Get your tickets here to attend!")
 }
 
-func printFirstName(bookings []string) []string {
+func getFirstName(bookings []map[string]string) []string {
 	firstNames := []string{}
 	// for index, booking := range bookings {}
 	// (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
 	for _, booking := range bookings {
-		names := strings.Fields(booking)
-		firstName := names[0]
+		/*
+			// Old version with slice of strings
+			names := strings.Fields(booking)
+			firstName := names[0]
+			firstNames = append(firstNames, firstName)
+		*/
+
+		// New version with slice of maps
+		firstName := booking["firstName"]
 		firstNames = append(firstNames, firstName)
 	}
 	return firstNames
@@ -102,7 +115,16 @@ func getUserInput() (string, string, string, uint) {
 
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
-	bookings = append(bookings, firstName+" "+lastName)
+
+	// create a map for user's data
+	var userData = make(map[string]string)
+	userData["firstName"] = firstName
+	userData["lastName"] = lastName
+	userData["email"] = email
+	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+	bookings = append(bookings, userData)
+	fmt.Printf("List of bookings is %v\n", bookings)
 
 	fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
