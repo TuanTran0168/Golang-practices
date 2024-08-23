@@ -3,7 +3,6 @@ package main
 import (
 	"booking-app/helper" // booking-app is the name of module in go.mod
 	"fmt"
-	"strconv"
 )
 
 /*
@@ -21,7 +20,17 @@ var remainingTickets uint = 50
 - Alternative way to create a slice
 - We need to define the initial size of the slice (example: make([]map[string]string, 0) )
 */
-var bookings = make([]map[string]string, 0)
+// var bookings = make([]map[string]string, 0)
+
+// Struct in Go
+type userData struct {
+	firstName       string
+	lastName        string
+	email           string
+	numberOfTickets uint
+}
+
+var bookings = make([]userData, 0)
 
 func main() {
 	fmt.Print("\n")
@@ -72,7 +81,7 @@ func greetUsers(confName string, confTickets int, remainingTickets int) {
 	fmt.Println("Get your tickets here to attend!")
 }
 
-func getFirstName(bookings []map[string]string) []string {
+func getFirstName(bookings []userData) []string {
 	firstNames := []string{}
 	// for index, booking := range bookings {}
 	// (Blank Identifier) Use underscore '_' to ignore variable I don't want to use
@@ -84,8 +93,13 @@ func getFirstName(bookings []map[string]string) []string {
 			firstNames = append(firstNames, firstName)
 		*/
 
-		// New version with slice of maps
-		firstName := booking["firstName"]
+		/*
+			//Old version with slice of maps
+			firstName := booking["firstName"]
+		*/
+
+		// New version with struct
+		firstName := booking.firstName
 		firstNames = append(firstNames, firstName)
 	}
 	return firstNames
@@ -116,12 +130,24 @@ func getUserInput() (string, string, string, uint) {
 func bookTicket(userTickets uint, firstName string, lastName string, email string) {
 	remainingTickets = remainingTickets - userTickets
 
-	// create a map for user's data
-	var userData = make(map[string]string)
-	userData["firstName"] = firstName
-	userData["lastName"] = lastName
-	userData["email"] = email
-	userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+	/*
+		old version: create a map for user's data
+		var userData = make(map[string]string)
+		userData["firstName"] = firstName
+		userData["lastName"] = lastName
+		userData["email"] = email
+		userData["numberOfTickets"] = strconv.FormatUint(uint64(userTickets), 10)
+
+		** Keys of map are sorted by alphabet (ASC) **
+	*/
+
+	// new version: create a struct for user's data
+	var userData = userData{
+		firstName:       firstName,
+		lastName:        lastName,
+		email:           email,
+		numberOfTickets: userTickets,
+	}
 
 	bookings = append(bookings, userData)
 	fmt.Printf("List of bookings is %v\n", bookings)
