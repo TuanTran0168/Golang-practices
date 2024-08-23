@@ -3,6 +3,8 @@ package main
 import (
 	"booking-app/helper" // booking-app is the name of module in go.mod
 	"fmt"
+	"sync"
+	"time"
 )
 
 /*
@@ -31,6 +33,16 @@ type userData struct {
 }
 
 var bookings = make([]userData, 0)
+var isContinue string = "yes"
+
+/*
+-                   Goroutines - Concurrency
+- WaitGroup waits for a collection of goroutines to finish.
+- Add(): Sets the number of goroutines to wait for (increase the counter by the provide number).
+- Wait(): Blocks until the WaitGroup counter is zero.
+- Done(): Decrements the WaitGroup counter by 1. This is called by Goroutines to indicate that it's finished.
+*/
+var waitGroup = sync.WaitGroup{}
 
 func main() {
 	fmt.Print("\n")
@@ -38,7 +50,7 @@ func main() {
 	greetUsers(conferenceName, conferenceTickets, int(remainingTickets))
 
 	// for condition {}
-	for remainingTickets > 0 && len(bookings) < 50 {
+	for remainingTickets > 0 && len(bookings) < 50 && isContinue == "yes" {
 
 		firstName, lastName, email, userTickets := getUserInput()
 
@@ -47,6 +59,15 @@ func main() {
 		if isValidName && isValidEmail && isValidTicketNumber {
 
 			bookTicket(userTickets, firstName, lastName, email)
+
+			// Add(): Sets the number of goroutines to wait for (increase the counter by the provide number).
+			waitGroup.Add(1)
+			/*
+				- "go ..." start a new Goroutine
+				- A Goroutine is a lightweight thread managed by the Go runtime.
+			*/
+			go sendTicket(userTickets, firstName, lastName, email)
+
 			firstNames := getFirstName(bookings)
 			fmt.Printf("The first names of bookings are: %v\n", firstNames)
 
@@ -69,8 +90,18 @@ func main() {
 			}
 		}
 
+		fmt.Printf("Do you want to continue? (yes/no): ")
+		fmt.Scan(&isContinue)
+
+		if isContinue == "no" {
+			fmt.Println("Bye...")
+			break
+		}
+
 		fmt.Print("\n")
 	}
+	// Wait(): Blocks until the WaitGroup counter is zero.
+	waitGroup.Wait()
 }
 
 func greetUsers(confName string, confTickets int, remainingTickets int) {
@@ -154,6 +185,24 @@ func bookTicket(userTickets uint, firstName string, lastName string, email strin
 
 	fmt.Printf("Thank you (%v %v) for booking (%v) tickets. You will receive a confirmation email at (%v)\n", firstName, lastName, userTickets, email)
 	fmt.Printf("%v tickets remaining for %v\n", remainingTickets, conferenceName)
+}
+
+func sendTicket(userTickets uint, firstName string, lastName string, email string) {
+	/*
+		-                     Save formatted string into a variable (Sprintf)
+		-	2 way:
+			-	tickets_string := strconv.FormatUint(uint64(userTickets), 10) + " tickets for " + firstName + " " + lastName
+			-	tickets := fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	*/
+
+	time.Sleep(10 * time.Second)
+	tickets := fmt.Sprintf("%v tickets for %v %v", userTickets, firstName, lastName)
+	fmt.Println("=============== Sending email... ===============")
+	fmt.Printf("Sending tickets:\n%v \nto email address %v\n", tickets, email)
+	fmt.Println("=============== Email sent! ===============")
+
+	// Done(): Decrements the WaitGroup counter by 1. This is called by Goroutines to indicate that it's finished.
+	waitGroup.Done()
 }
 
 // switch case in Golang
