@@ -1,23 +1,35 @@
 package main
 
-import (
-	"fmt"
-	"go-oops/structs"
-)
+import "go-oops/polymorphism"
 
 func main() {
-	person := structs.Person{}
+	// ================ Polymorphism ================
+	/*
+		// Syntax 1
 
-	err := person.SetFirstName("Tuấn")
+		var circle polymorphism.Shape = &polymorphism.Circle{}
+		circle.Render()
 
-	if err != nil {
-		fmt.Println(err.Error())
-	}
+		var square polymorphism.Shape = &polymorphism.Square{}
+		square.Render()
 
-	person.SetLastName("Trần")
-	person.SetAge(22)
+		fmt.Println(circle, square)
+	*/
 
-	person_1 := structs.NewPerson("Tuấn", "Trần", 22)
+	/*
+		// Syntax 2
 
-	fmt.Println(person, person_1)
+		circle := &polymorphism.Circle{}
+		square := &polymorphism.Square{}
+
+		polymorphism.ShapeRender(circle)
+		polymorphism.ShapeRender(square)
+	*/
+
+	// Syntax 3
+	circle := new(polymorphism.Circle)
+	square := new(polymorphism.Square)
+
+	polymorphism.ShapeRender(circle)
+	polymorphism.ShapeRender(square)
 }
