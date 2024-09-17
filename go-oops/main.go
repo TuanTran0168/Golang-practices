@@ -1,6 +1,9 @@
 package main
 
-import "go-oops/polymorphism"
+import (
+	"fmt"
+	"go-oops/composition"
+)
 
 func main() {
 	// ================ Polymorphism ================
@@ -26,10 +29,21 @@ func main() {
 		polymorphism.ShapeRender(square)
 	*/
 
-	// Syntax 3
-	circle := new(polymorphism.Circle)
-	square := new(polymorphism.Square)
+	/*
+			// Syntax 3
+		circle := new(polymorphism.Circle)
+		square := new(polymorphism.Square)
 
-	polymorphism.ShapeRender(circle)
-	polymorphism.ShapeRender(square)
+		polymorphism.ShapeRender(circle)
+		polymorphism.ShapeRender(square)
+	*/
+
+	// ================ Composition ================
+
+	// Syntax 1
+	car := composition.NewCarWithProperties("Car 1", "Engine 1", 100, "Wheel 1", 10)
+
+	fmt.Println(car)
+	fmt.Println(car.GetEngine(), car.GetEngine().GetName(), car.GetEngine().GetHP())
+	fmt.Println(car.GetWheel(), car.GetWheel().GetName(), car.GetWheel().GetWheelDimensions())
 }
