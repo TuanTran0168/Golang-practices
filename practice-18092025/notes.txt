@@ -1,0 +1,17 @@
+1. Điểm mạnh yếu của go
+2. Goroutines là gì
+3. Go có hỗ trợ oop ko
+4. Channel
+6. Go là đa tiến trình hay là gì
+7. Phương thức http
+8. Tối ưu sql
+9. Xử lý api chậm
+10. Postgres điểm mạnh yếu
+11. Sự khác nhau giữa sql, no-sql
+12. Go là biên dịch hay phiên dịch
+13. Jwt
+14. Định hướng tương lai
+15. Giữa môi trường theo đúng quy trình và linh hoạt
+16. Em đang có 1 task gấp cần làm rõ với bên bộ phận khác (FE), nhưng mà thg đó cũng đang gấp
+thì em xử lý như nào
+17. ...
